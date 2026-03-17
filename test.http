@@ -1,0 +1,25 @@
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+"id": "1",
+"name": "Laptop",
+"description": "Gaming Laptop",
+"category": "Electronics",
+"price": 1200,
+"brand": "Dell",
+"quantity": 1000
+}
+
+GET http://localhost:8080/products/list
+GET http://localhost:8080/products/1
+PUT http://localhost:8080/products/1
+{
+"name":"Laptop Pro",
+"description":"Updated Laptop",
+"category":"Electronics",
+"price":1500,
+"brand":"Dell",
+"quantity":5
+}
+DELETE http://localhost:8080/products/1
