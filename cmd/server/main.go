@@ -1,34 +1,47 @@
 package main
 
 import (
+	"context"
 	"net/http"
+	"time"
 
 	"github.com/anvi23mth/inventory-system/internal/handler"
+	"github.com/anvi23mth/inventory-system/internal/repository"
 	"github.com/anvi23mth/inventory-system/internal/service"
 	"github.com/anvi23mth/inventory-system/pkg/logger"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
-	// 1. Initialize dependencies [cite: 152, 164]
 	logger.Init()
-	service.SeedData()
 
-	// 2. Define Routes [cite: 161, 162, 178]
+	// 1. Setup MongoDB Connection
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-	// Basic check [cite: 162]
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil {
+		logger.Log.Fatal().Err(err).Msg("Failed to connect to MongoDB")
+	}
+
+	db := client.Database("inventory_db")
+
+	// 2. Initialize Layers (The Week 3 Way)
+	productRepo := repository.NewProductRepository(db)
+	productSvc := service.NewProductService(productRepo)
+	productHandler := handler.NewProductHandler(productSvc)
+
+	// 3. Define Routes
 	http.HandleFunc("/hello-world", handler.HelloWorld)
 
-	// CREATE: Use the specific handler for POST [cite: 178]
-	http.HandleFunc("/products", handler.ProductHandler)
+	// These will now point to the methods inside your productHandler instance
+	http.HandleFunc("/products", productHandler.CreateProduct)
+	http.HandleFunc("/products/", productHandler.HandleProductRequest)
 
-	// READ ALL, READ ONE, UPDATE, DELETE
-	// The trailing slash "/" allows this to catch /products/list and /products/{id}
-	http.HandleFunc("/products/", handler.ProductHandler)
-
-	// 3. Start Server [cite: 159, 182]
-	logger.Log.Info().Msg("Server started at :8080")
+	logger.Log.Info().Msg("Server started at :8080 with MongoDB")
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
-		logger.Log.Fatal().Err(err).Msg("Server failed to start")
+		logger.Log.Fatal().Err(err).Msg("Server failed")
 	}
 }
