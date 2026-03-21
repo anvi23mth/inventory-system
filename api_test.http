@@ -1,0 +1,16 @@
+### Create a New Product
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "id": "p3",
+  "name": "Mechanical Keyboard",
+  "description": "RGB Backlit, Blue Switches",
+  "category": "Electronics",
+  "price": 89.99,
+  "brand": "Keychron",
+  "quantity": 15
+}
+
+### List All Products
+GET http://localhost:8080/products/list

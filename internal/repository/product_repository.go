@@ -1,107 +1,61 @@
 package repository
 
 import (
-	"github.com/anvi23mth/inventory-system/internal/database"
+	"context"
+	"errors"
+
 	"github.com/anvi23mth/inventory-system/internal/model"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func CreateProduct(p model.Product) error {
+type ProductRepository struct {
+	Col *mongo.Collection
+}
 
-	query := `
-	INSERT INTO products(id,name,description,category,price,brand,quantity)
-	VALUES($1,$2,$3,$4,$5,$6,$7)
-	`
+func NewProductRepository(db *mongo.Database) *ProductRepository {
+	return &ProductRepository{Col: db.Collection("products")}
+}
 
-	_, err := database.DB.Exec(
-		query,
-		p.ID,
-		p.Name,
-		p.Description,
-		p.Category,
-		p.Price,
-		p.Brand,
-		p.Quantity,
-	)
-
+func (r *ProductRepository) Create(ctx context.Context, p model.Product) error {
+	_, err := r.Col.InsertOne(ctx, p)
 	return err
 }
 
-func GetProducts() ([]model.Product, error) {
-
-	rows, err := database.DB.Query(`SELECT * FROM products`)
+func (r *ProductRepository) GetAll(ctx context.Context) ([]model.Product, error) {
+	cursor, err := r.Col.Find(ctx, bson.M{})
 	if err != nil {
 		return nil, err
 	}
-
-	defer rows.Close()
-
 	var products []model.Product
+	err = cursor.All(ctx, &products)
+	return products, err
+}
 
-	for rows.Next() {
+//	func (r *ProductRepository) GetByID(ctx context.Context, id string) (model.Product, error) {
+//		var p model.Product
+//		err := r.Col.FindOne(ctx, bson.M{"_id": id}).Decode(&p)
+//		return p, err
+//	}
+func (r *ProductRepository) GetByID(ctx context.Context, id string) (model.Product, error) {
+	var p model.Product
+	err := r.Col.FindOne(ctx, bson.M{"_id": id}).Decode(&p)
 
-		var p model.Product
-
-		rows.Scan(
-			&p.ID,
-			&p.Name,
-			&p.Description,
-			&p.Category,
-			&p.Price,
-			&p.Brand,
-			&p.Quantity,
-		)
-
-		products = append(products, p)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return model.Product{}, errors.New("product not found")
+		}
+		return model.Product{}, err
 	}
 
-	return products, nil
+	return p, nil
 }
-func GetProductByID(id string) (model.Product, error) {
-
-	query := `SELECT * FROM products WHERE id=$1`
-
-	row := database.DB.QueryRow(query, id)
-
-	var p model.Product
-
-	err := row.Scan(
-		&p.ID,
-		&p.Name,
-		&p.Description,
-		&p.Category,
-		&p.Price,
-		&p.Brand,
-		&p.Quantity,
-	)
-
-	return p, err
-}
-func UpdateProduct(id string, p model.Product) error {
-
-	query := `
-	UPDATE products
-	SET name=$1, description=$2, category=$3, price=$4, brand=$5, quantity=$6
-	WHERE id=$7
-	`
-
-	_, err := database.DB.Exec(
-		query,
-		p.Name,
-		p.Description,
-		p.Category,
-		p.Price,
-		p.Brand,
-		p.Quantity,
-		id,
-	)
-
+func (r *ProductRepository) Update(ctx context.Context, id string, p model.Product) error {
+	_, err := r.Col.ReplaceOne(ctx, bson.M{"_id": id}, p)
 	return err
 }
-func DeleteProduct(id string) error {
 
-	query := `DELETE FROM products WHERE id=$1`
-
-	_, err := database.DB.Exec(query, id)
-
+func (r *ProductRepository) Delete(ctx context.Context, id string) error {
+	_, err := r.Col.DeleteOne(ctx, bson.M{"_id": id})
 	return err
 }

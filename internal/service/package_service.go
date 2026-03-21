@@ -1,60 +1,40 @@
 package service
 
 import (
-	"errors"
+	"context"
 
 	"github.com/anvi23mth/inventory-system/internal/model"
+	"github.com/anvi23mth/inventory-system/internal/repository"
 )
 
-var products = make(map[string]model.Product)
-
-// CREATE
-func CreateProduct(p model.Product) (model.Product, error) {
-	if p.ID == "" {
-		return model.Product{}, errors.New("product ID is required")
-	}
-	products[p.ID] = p
-	return p, nil
+// ProductService must start with a Capital 'P' to be exported
+type ProductService struct {
+	Repo *repository.ProductRepository
 }
 
-// READ (List)
-func GetAllProducts() ([]model.Product, error) {
-	var list []model.Product
-	for _, p := range products {
-		list = append(list, p)
-	}
-	return list, nil
+// NewProductService initializes the service
+func NewProductService(r *repository.ProductRepository) *ProductService {
+	return &ProductService{Repo: r}
 }
 
-// READ (Single)
-func GetProductByID(id string) (model.Product, error) {
-	p, exists := products[id]
-	if !exists {
-		return model.Product{}, errors.New("product not found")
-	}
-	return p, nil
+func (s *ProductService) CreateProduct(ctx context.Context, p model.Product) (model.Product, error) {
+	err := s.Repo.Create(ctx, p)
+	return p, err
 }
 
-// UPDATE (Modify)
-func UpdateProduct(id string, p model.Product) (model.Product, error) {
-	if _, exists := products[id]; !exists {
-		return model.Product{}, errors.New("cannot update: product not found")
-	}
-	p.ID = id // Ensure ID remains consistent
-	products[id] = p
-	return p, nil
+func (s *ProductService) ListProducts(ctx context.Context) ([]model.Product, error) {
+	return s.Repo.GetAll(ctx)
 }
 
-// DELETE
-func DeleteProduct(id string) error {
-	if _, exists := products[id]; !exists {
-		return errors.New("cannot delete: product not found")
-	}
-	delete(products, id)
-	return nil
+func (s *ProductService) GetProductByID(ctx context.Context, id string) (model.Product, error) {
+	return s.Repo.GetByID(ctx, id)
 }
 
-func SeedData() {
-	p := model.Product{ID: "seed_01", Name: "Sample Item", Price: 10.00, Quantity: 5}
-	products[p.ID] = p
+func (s *ProductService) UpdateProduct(ctx context.Context, id string, p model.Product) (model.Product, error) {
+	err := s.Repo.Update(ctx, id, p)
+	return p, err
+}
+
+func (s *ProductService) DeleteProduct(ctx context.Context, id string) error {
+	return s.Repo.Delete(ctx, id)
 }
