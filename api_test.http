@@ -11,6 +11,20 @@ Content-Type: application/json
   "brand": "Keychron",
   "quantity": 15
 }
+### Create a New Product
+POST http://localhost:8080/products
+Content-Type: application/json
 
+{
+    "id": "p4",
+    "name": "Wireless Mouse",
+    "description": "Ergonomic 2.4G Mouse",
+    "category": "Electronics",
+    "price": 25.50,
+    "brand": "Logitech",
+    "quantity": 100
+}
 ### List All Products
 GET http://localhost:8080/products/list
+### Get Single Product (Replace ID with one from MongoDB Compass)
+GET http://localhost:8080/products/p4
