@@ -9,3 +9,6 @@ Prices cannot be negative (preventing financial data corruption).
 Product Names cannot be empty (ensuring data integrity in the catalog).
 If a user tries to save a product with a negative price, the Service returns a custom error, stopping the process before it hits the database.
 If MongoDB takes too long to respond, the context logic will automatically kill the request to prevent the server from locking up.
+Also a critical addition in Week 4 was the implementation of Latency Monitoring at the middleware level.
+To ensure the system remains performant and to identify slow database queries or bottlenecks, we added a logging wrapper.
+: The system captures a "start time" at the moment a request is received. Once the function completes its execution and the response is sent, the middleware calculates the difference ($Duration = EndTime - StartTime$). now Every API call now logs the Method, Path, and Exact Duration
