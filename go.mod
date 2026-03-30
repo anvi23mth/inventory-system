@@ -3,6 +3,7 @@ module github.com/anvi23mth/inventory-system
 go 1.25.0
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.11.2
 	github.com/rs/zerolog v1.34.0
 	go.mongodb.org/mongo-driver v1.17.9
