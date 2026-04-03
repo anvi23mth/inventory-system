@@ -1,5 +1,11 @@
 package model
 
+type ProductCategory struct {
+	ID          string `json:"id" bson:"_id"`
+	Title       string `json:"title" bson:"title"`
+	Description string `json:"description" bson:"description"`
+}
+
 type Product struct {
 	ID          string  `json:"id" bson:"_id,omitempty"` // MongoDB uses _id
 	Name        string  `json:"name" bson:"name"`

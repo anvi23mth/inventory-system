@@ -1,0 +1,23 @@
+mode: set
+github.com/anvi23mth/inventory-system/internal/service/category_service.go:23.85,25.2 1 1
+github.com/anvi23mth/inventory-system/internal/service/category_service.go:28.101,30.19 1 1
+github.com/anvi23mth/inventory-system/internal/service/category_service.go:30.19,32.3 1 1
+github.com/anvi23mth/inventory-system/internal/service/category_service.go:33.2,33.30 1 1
+github.com/anvi23mth/inventory-system/internal/service/category_service.go:36.103,38.2 1 0
+github.com/anvi23mth/inventory-system/internal/service/category_service.go:39.112,40.19 1 0
+github.com/anvi23mth/inventory-system/internal/service/category_service.go:40.19,42.3 1 0
+github.com/anvi23mth/inventory-system/internal/service/category_service.go:43.2,43.34 1 0
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:17.72,19.2 1 1
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:21.101,23.17 1 1
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:23.17,25.3 1 1
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:26.2,26.18 1 1
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:26.18,28.3 1 1
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:31.2,32.15 2 1
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:34.85,36.2 1 1
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:38.96,40.2 1 0
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:47.78,49.2 1 0
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:50.112,52.17 1 1
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:52.17,54.3 1 1
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:55.2,55.18 1 1
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:55.18,57.3 1 0
+github.com/anvi23mth/inventory-system/internal/service/package_service.go:58.2,59.15 2 1
