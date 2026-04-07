@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors" // Required for validation errors
 
 	"github.com/anvi23mth/inventory-system/internal/model"
 	"github.com/anvi23mth/inventory-system/internal/repository"
@@ -9,19 +10,27 @@ import (
 
 // ProductService must start with a Capital 'P' to be exported
 type ProductService struct {
-	Repo *repository.ProductRepository
+	Repo repository.ProductRepository
 }
 
 // NewProductService initializes the service
-func NewProductService(r *repository.ProductRepository) *ProductService {
+func NewProductService(r repository.ProductRepository) *ProductService {
 	return &ProductService{Repo: r}
 }
 
 func (s *ProductService) CreateProduct(ctx context.Context, p model.Product) (model.Product, error) {
+	// --- WEEK 3 VALIDATION LOGIC ---
+	if p.Price < 0 {
+		return model.Product{}, errors.New("price cannot be negative")
+	}
+	if p.Name == "" {
+		return model.Product{}, errors.New("product name is required")
+	}
+	// -------------------------------
+
 	err := s.Repo.Create(ctx, p)
 	return p, err
 }
-
 func (s *ProductService) ListProducts(ctx context.Context) ([]model.Product, error) {
 	return s.Repo.GetAll(ctx)
 }

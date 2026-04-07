@@ -1,0 +1,9 @@
+Unit test
+Week 3: TestCreateProduct_Validation in the service layer.
+It verifies that the "Brain" of the application correctly handles data. It checks multiple scenarios using a Table-Driven approach
+It prevents "bad data" from being processed. For example, it ensures an error is returned if a product has a negative price or a missing name
+Week 4: created TestAuthMiddleware in the middleware layer.
+It tests the security "gatekeeper" in isolation. It simulates HTTP requests with missing, incorrect, and valid X-Admin-Key headers.
+It ensures the 403 Forbidden logic is ironclad. It proves that no unauthorized request can ever reach the internal handlers
+Integration test:
+It tests: TestHelloWorldEndpoint,TestCreateProductIntegration,TestProtectedProductRoute
